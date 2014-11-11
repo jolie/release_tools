@@ -1,0 +1,54 @@
+/***************************************************************************
+ *   Copyright 2014 (C) by Fabrizio Montesi <famontesi@gmail.com>          *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU Library General Public License as       *
+ *   published by the Free Software Foundation; either version 2 of the    *
+ *   License, or (at your option) any later version.                       *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU Library General Public     *
+ *   License along with this program; if not, write to the                 *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ *                                                                         *
+ *   For details about the authors of this software, see the AUTHORS file. *
+ ***************************************************************************/
+
+package jolie.installer;
+
+import java.io.IOException;
+
+/**
+ *
+ * @author Fabrizio Montesi
+ */
+public class JolieInstaller
+{
+	public static void main( String[] args )
+	{
+		try {
+			new Installer().run();
+		} catch( Exception e ) {
+			e.printStackTrace();
+		}
+		/* String jap = "jap:" + JolieInstaller.class.getProtectionDomain().getCodeSource().getLocation().getPath() + "!/";
+		Jolie.main(
+			new String[] {
+				"-l",
+				jap + "dist/jolie/lib/*:"
+				+ jap + "dist/jolie/lib:"
+				+ jap + "dist/jolie/javaServices/*:"
+				+ jap + "dist/jolie/extensions/*",
+				"-i",
+				"dist/jolie/include",
+				"scripts/installer.ol",
+				Helpers.getOperatingSystemType().name().toLowerCase()
+			}
+		);*/
+	}
+}
