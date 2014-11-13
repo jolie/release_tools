@@ -111,9 +111,9 @@ main
 
 	reset_args;
 	e = "jar";
-	e_arg = "uvfm";
+	e_arg = "uvf";
 	e_arg = ReleaseDir + "/jolie_installer.jar";
-	e_arg = "MANIFEST.MF";
+	// e_arg = "scripts/MANIFEST.MF";
 	e_arg = "-C";
 	e_arg = ReleaseDir;
 	e_arg = "dist.zip";
