@@ -22,6 +22,7 @@
 include "console.iol"
 include "runtime.iol"
 include "exec.iol"
+include "file.iol"
 include "string_utils.iol"
 
 include "inst_interface.iol"
@@ -30,58 +31,45 @@ outputPort OSInst{
 	Interfaces: InstInterface
 }
 
-define setJHProc
-{
-  getDJH@OSInst()( djh );
-  println@Console( "Do you want to set " + JOLIE_HOME + " to default [y/any]" )();
-  println@Console( " -> " + djh )();
-  registerForInput@Console()();
-  in( c );
-  if( c == "y" ) {
-    jh = djh
-  } else {
-  	println@Console( "insert the path for JOLIE_HOME" )();
-  	registerForInput@Console()();
-  	in( jh )
-  };
-  setJH@OSInst( jh )()
-}
+// define setJHProc
+// {
+//   getDJH@OSInst()( djh );
+//   print@Console( "\nInsert the path of " + JOLIE_HOME + ".\n" + 
+//     JOLIE_HOME + " is where Jolie executables\n" + 
+//     "and libraries will be installed (e.g., " + djh + ")\n\n > " )();
+//   registerForInput@Console()();
+//   in( jh );
+//  	setJH@OSInst( jh )()
+// }
 
-define setLPProc
-{
-	getDLP@OSInst()( dlp );
-	println@Console( "The default path for Jolie launchers is " + "\n" + dlp + 
-		"\nDo you want to copy the launchers in the default path [y/any]" )();
-	registerForInput@Console()();
-  in( c );
-  if( c == "y" ) {
-    lp = djh
-  } else {
-  	println@Console( "insert the path for JOLIE_HOME" )();
-  	registerForInput@Console()();
-  	in( lp )
-  }
-}
+// define setLPProc
+// {
+// 	getDLP@OSInst()( dlp );
+// 	print@Console( "Insert the path where you want to copy Jolie launchers" + 
+//     " (e.g., \"" + dlp + "\")\n\n > " )();
+// 	registerForInput@Console()();
+//  	in( lp )
+// }
 
 main
 {
-	// sets the installer for this OS
-	eInfo.type = "Jolie";
+  // sets the installer for this OS
+  eInfo.type = "Jolie";
   eInfo.filepath = args[0] + "_installer.ol";
-  loadEmbeddedService@Runtime( eInfo )( OSInst.location );
+  println@Console( "Trying to embed " + eInfo.filepath )();
+  loadEmbeddedService@Runtime( eInfo )( OSInst.location )//;
 
-  unzipDist@OSInst()();
+//  unzipDist@OSInst()();
 
-	setJHProc;
-	copyBins@OSInst( jh )( exitCode );
+//  setJHProc;
+// 	copyBins@OSInst( jh )();
+//  println@Console( "Jolie is installed into path \"" + jh + "\"\n" )();
 
- //  print@Console( "\nPress any key to continue..." )();
-	// registerForInput@Console()();
-	// in()
+//  while( !done ){
+//    setLPProc;
+//    copyLaunchers@OSInst( lp )( done )
+//  };
 
-	// setLPProc;
-	// copyLaunchers;
-
-	println@Console( "Jolie is installed, try running 'jolie' under a new shell" )()
+// 	println@Console( "Jolie is installed, try running 'jolie' under a new shell" )()
 }
 

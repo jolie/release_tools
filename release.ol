@@ -21,6 +21,7 @@
 
 include "exec.iol"
 include "file.iol"
+include "console.iol"
 
 constants {
 	ReleaseDir = "release"
@@ -70,7 +71,7 @@ main
 {
 	e_arg -> e.args[#e.args];
 //	compile;
-
+	
 	recreateReleaseDir;	
 
 	e = "cp";
@@ -93,22 +94,38 @@ main
 	e_arg = "dist";
 	exec;
 	undef( e.workingDirectory );
-	
+
+	lq.directory = "scripts";
+	lq.regex = ".+\\.i?ol";
+	list@File( lq )( lr );
+	reset_args;
+	e = "zip";
+	e.workingDirectory = "release";
+	e_arg = "-j";
+	e_arg = "installer.zip";
+	for( i=0, i<#lr.result, i++ ){
+		e_arg = "../" + lq.directory + "/" + lr.result[ i ]
+	};
+	exec;
+	undef( e.workingDirectory );
+
 	reset_args;
 	e = "jar";
 	e_arg = "uvfm";
 	e_arg = ReleaseDir + "/jolie_installer.jar";
-	e_arg = "scripts/MANIFEST.MF";
+	e_arg = "MANIFEST.MF";
 	e_arg = "-C";
 	e_arg = ReleaseDir;
 	e_arg = "dist.zip";
+	e_arg = "-C";
+	e_arg = ReleaseDir;
+	e_arg = "installer.zip";
 	e_arg = "-C";
 	e_arg = ReleaseDir + "/dist/jolie";
 	e_arg = "jolie.jar";
 	e_arg = "-C";
 	e_arg = ReleaseDir + "/dist/jolie";
 	e_arg = "lib/libjolie.jar";
-	e_arg = "scripts/installer.ol";
 	exec
 }
 

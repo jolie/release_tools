@@ -32,8 +32,7 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.channels.Channels;
-import jolie.Jolie;
-import jolie.util.Helpers;
+import java.util.Arrays;
 
 /**
  *
@@ -63,10 +62,11 @@ public class Installer
 	private File createTmpDir()
 		throws IOException
 	{
-		File tmp = File.createTempFile( "jolie_installer_tmp", "" );
+//		File tmp = File.createTempFile( "jolie_installer_tmp", "" );
+		File tmp = new File( System.getProperty("user.home") + File.separator + "Desktop" + File.separator + "jolie_installer" );
 		tmp.delete();
 		tmp.mkdir();
-		//tmp.deleteOnExit();
+//		tmp.deleteOnExit();
 		return tmp;
 	}
 	
@@ -80,10 +80,10 @@ public class Installer
 	}
 	
 	private void copyInstallerScript( File parentDir )
-		throws IOException
+		throws IOException, InterruptedException
 	{
-		InputStream is = JolieInstaller.class.getClassLoader().getResourceAsStream( "scripts/installer.ol" );
-		File distTmp = new File( parentDir, "installer.ol" );
+		InputStream is = JolieInstaller.class.getClassLoader().getResourceAsStream( "installer.zip" );
+		File distTmp = new File( parentDir, "installer.zip" );
 		distTmp.createNewFile();
 		new FileOutputStream( distTmp ).getChannel().transferFrom( Channels.newChannel( is ), 0, Long.MAX_VALUE );
 	}
@@ -93,8 +93,9 @@ public class Installer
 	{
 		File tmp = createTmpDir();
 		copyDistZip( tmp );
-		copyInstallerScript( tmp );
 		exec( tmp, "unzip", "dist.zip" );
+		copyInstallerScript( tmp );
+		exec( tmp, "unzip", "installer.zip" );
 		return new File( tmp, "dist" );
 	}
 	
@@ -114,6 +115,7 @@ public class Installer
 		IllegalAccessException, InvocationTargetException
 	{
 		File tmp = createTmpDist();
+		System.out.println( tmp );
 		String jolieDir = new File( tmp, "jolie" ).getAbsolutePath();
 		char fs = File.separatorChar;
 		
@@ -124,15 +126,15 @@ public class Installer
 		m.invoke(
 			null,
 			(Object) new String[] {
-				"-l",
-				jolieDir + fs + "lib" + fs + "*:"
-				+ jolieDir + fs + "lib:"
-				+ jolieDir + fs + "javaServices" + fs + "*:"
-				+ jolieDir + fs + "extensions" + fs + "*",
-				"-i",
-				jolieDir + fs + "include",
-				tmp.getParent() + fs + "installer.ol",
-				getOSName( cl ).toLowerCase()
+			"-l",
+			jolieDir + fs + "lib" + fs + "*:"
+			+ jolieDir + fs + "lib:"
+			+ jolieDir + fs + "javaServices" + fs + "*:"
+			+ jolieDir + fs + "extensions" + fs + "*",
+			"-i",
+			jolieDir + fs + "include",
+			tmp.getParent() + fs + "installer.ol",
+			getOSName( cl ).toLowerCase()
 			}
 		);
 	}
