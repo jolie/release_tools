@@ -119,6 +119,7 @@ public class Installer
 		String jolieDir = new File( tmp, "jolie" ).getAbsolutePath();
 		char fs = File.separatorChar;
 		
+		
 		URL[] urls = new URL[] { new URL( "file:" + jolieDir + fs + "jolie.jar" ), new URL( "file:" + jolieDir + fs + "lib" + fs + "libjolie.jar" ) };
 		ClassLoader cl = new URLClassLoader( urls, Installer.class.getClassLoader() );
 		Class<?> jolieClass = cl.loadClass( "jolie.Jolie" );
@@ -133,6 +134,7 @@ public class Installer
 			+ jolieDir + fs + "extensions" + fs + "*",
 			"-i",
 			jolieDir + fs + "include",
+			"--trace",
 			tmp.getParent() + fs + "installer.ol",
 			getOSName( cl ).toLowerCase()
 			}
