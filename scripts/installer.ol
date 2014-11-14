@@ -31,25 +31,25 @@ outputPort OSInst{
 	Interfaces: InstInterface
 }
 
-// define setJHProc
-// {
-//   getDJH@OSInst()( djh );
-//   print@Console( "\nInsert the path of " + JOLIE_HOME + ".\n" + 
-//     JOLIE_HOME + " is where Jolie executables\n" + 
-//     "and libraries will be installed (e.g., " + djh + ")\n\n > " )();
-//   registerForInput@Console()();
-//   in( jh );
-//  	setJH@OSInst( jh )()
-// }
+define setJHProc
+{
+  getDJH@OSInst()( djh );
+  print@Console( "\nInsert the path of " + JOLIE_HOME + ".\n" + 
+    JOLIE_HOME + " is where Jolie executables\n" + 
+    "and libraries will be installed (e.g., " + djh + ")\n\n > " )();
+  registerForInput@Console()();
+  in( jh );
+ 	setJH@OSInst( jh )()
+}
 
-// define setLPProc
-// {
-// 	getDLP@OSInst()( dlp );
-// 	print@Console( "Insert the path where you want to copy Jolie launchers" + 
-//     " (e.g., \"" + dlp + "\")\n\n > " )();
-// 	registerForInput@Console()();
-//  	in( lp )
-// }
+define setLPProc
+{
+	getDLP@OSInst()( dlp );
+	print@Console( "Insert the path where you want to copy Jolie launchers" + 
+    " (e.g., \"" + dlp + "\")\n\n > " )();
+	registerForInput@Console()();
+ 	in( lp )
+}
 
 main
 {
@@ -57,19 +57,19 @@ main
   eInfo.type = "Jolie";
   eInfo.filepath = args[0] + "_installer.ol";
   println@Console( "Trying to embed " + eInfo.filepath )();
-  loadEmbeddedService@Runtime( eInfo )( OSInst.location )//;
+  loadEmbeddedService@Runtime( eInfo )( OSInst.location );
 
-//  unzipDist@OSInst()();
+   unzipDist@OSInst()();
 
-//  setJHProc;
-// 	copyBins@OSInst( jh )();
-//  println@Console( "Jolie is installed into path \"" + jh + "\"\n" )();
+   setJHProc;
+  	copyBins@OSInst( jh )();
+   println@Console( "Jolie is installed into path \"" + jh + "\"\n" )();
 
-//  while( !done ){
-//    setLPProc;
-//    copyLaunchers@OSInst( lp )( done )
-//  };
+   while( !done ){
+     setLPProc;
+     copyLaunchers@OSInst( lp )( done )
+   };
 
-// 	println@Console( "Jolie is installed, try running 'jolie' under a new shell" )()
+  	println@Console( "Jolie is installed, try running 'jolie' under a new shell" )()
 }
 
