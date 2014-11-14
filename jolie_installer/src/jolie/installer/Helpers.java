@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright 2014 (C) by Fabrizio Montesi <famontesi@gmail.com>          *
+ *   Copyright (C) 2014 by Fabrizio Montesi <famontesi@gmail.com>          *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Library General Public License as       *
@@ -21,21 +21,32 @@
 
 package jolie.installer;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-
 /**
- *
+ * A convenience class with some helper functions for cleaner coding.
  * @author Fabrizio Montesi
  */
-public class JolieInstaller
+public class Helpers
 {
-	public static void main( String[] args )
-	{
-		try {
-			new Installer().run();
-		} catch( IOException | InterruptedException | ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e ) {
-			e.printStackTrace();
+	
+	public static enum OSType {	Windows, MacOS, Linux, Other }
+	
+	private static final OSType detectedOS;
+	
+	static {
+		final String os = System.getProperty( "os.name", "other" ).toLowerCase();
+		if ( os.contains("mac") || os.contains("darwin") ) {
+			detectedOS = OSType.MacOS;
+		} else if ( os.contains("win") ) {
+			detectedOS = OSType.Windows;
+		} else if ( os.contains("nux") ) {
+			detectedOS = OSType.Linux;
+		} else {
+			detectedOS = OSType.Other;
 		}
+	}
+	
+	public static OSType getOperatingSystemType()
+	{
+		return detectedOS;
 	}
 }
