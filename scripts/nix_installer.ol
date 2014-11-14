@@ -61,7 +61,7 @@ main
 	[ setJH( jh )(){
 		e = "sh";
 		e.args[#e.args] = "-c";
-		e.args[#e.args] = "'echo " + jh + "'";
+		e.args[#e.args] = "echo " + jh;
 		exec@Exec( e )( e_res );
 		f = e_res;
 		trim@StringUtils( f )( f );
