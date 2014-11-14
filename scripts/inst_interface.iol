@@ -10,7 +10,6 @@ interface InstInterface {
   									getDJH( void )( string ),
   									getDLP( void )( string ),
   									setJH( string )( void ),
-  									unzipDist( void )( void ),
   									copyBins( string )( void ),
   									copyLaunchers( string )( bool ),
 }

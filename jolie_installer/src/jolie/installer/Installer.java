@@ -22,14 +22,18 @@
 package jolie.installer;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.channels.Channels;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  *
@@ -62,11 +66,11 @@ public class Installer {
 	private File createTmpDir()
 		throws IOException
 	{
-//		File tmp = File.createTempFile( "jolie_installer_tmp", "" );
-		File tmp = new File( System.getProperty("user.home") + File.separator + "Desktop" + File.separator + "jolie_installer" );
+		File tmp = File.createTempFile( "jolie_installer_tmp", "" );
+//		File tmp = new File( System.getProperty("user.home") + File.separator + "Desktop" + File.separator + "jolie_installer" );
 		tmp.delete();
 		tmp.mkdir();
-//		tmp.deleteOnExit();
+		tmp.deleteOnExit();
 		return tmp;
 	}
 	
@@ -144,29 +148,77 @@ public class Installer {
 	
 	private void runCmd( String cmd ) throws InterruptedException {
 
-	  try {
-      String line;
-//      OutputStream stdin;
-      InputStream stdin, stderr;
+	try {
+		String line;
+		final Process process = Runtime.getRuntime().exec( cmd );
+		final InputStream stderr = process.getErrorStream();
+		final InputStream stdin = process.getInputStream();
+		final OutputStream stdout = process.getOutputStream();
+		
+		ExecutorService e1 = Executors.newSingleThreadExecutor();
+		ExecutorService e2 = Executors.newSingleThreadExecutor();
+		ExecutorService e3 = Executors.newSingleThreadExecutor();
+		
+		e1.execute( new Runnable() {
+			@Override
+			public void run() {
+				try {	
+					BufferedReader br = new BufferedReader( new InputStreamReader( System.in ));
+					BufferedWriter bw = new BufferedWriter(new OutputStreamWriter( stdout ));
 
-      Process process = Runtime.getRuntime().exec( cmd );
-      stderr = process.getErrorStream();
-      stdin = process.getInputStream();
-
-      BufferedReader brCleanUp = new BufferedReader( new InputStreamReader( stdin ) );
-      while ( ( line = brCleanUp.readLine() ) != null ) {
-        System.out.println ( line );
-      }
-      brCleanUp.close();
-      
-      brCleanUp = new BufferedReader ( new InputStreamReader( stderr ) );
-      while ( ( line = brCleanUp.readLine() ) != null ) {
-        System.out.println ( line );
-      }
-      brCleanUp.close();
-      process.destroy();
-    } catch (IOException err) {
-      err.printStackTrace();
+					String l;
+					while( ( l = br.readLine() ) != null ){
+						bw.write( l );
+						bw.write( "\n" );
+						bw.flush();
+					}
+					bw.close();
+					br.close();
+				} catch (IOException ex) {
+//					Logger.getLogger(Installer.class.getName()).log(Level.SEVERE, null, ex);
+				}
+			}
+		});
+		
+		e2.execute( new Runnable() {
+			@Override
+			public void run() {
+				try {
+					BufferedReader br = new BufferedReader( new InputStreamReader(stdin) );
+					String l;
+					while( ( l = br.readLine() ) != null ){
+						System.out.println( l );
+					}
+					br.close();
+				} catch (IOException ex) {
+//					Logger.getLogger(Installer.class.getName()).log(Level.SEVERE, null, ex);
+				}
+			}
+		});
+		
+		e3.execute( new Runnable() {
+			@Override
+			public void run() {
+				try {
+					BufferedReader br = new BufferedReader( new InputStreamReader( stderr) );
+					String l;
+					while( ( l = br.readLine() ) != null  ){
+						System.out.println( l );
+					}
+					br.close();
+				} catch (IOException ex) {
+//					Logger.getLogger(Installer.class.getName()).log(Level.SEVERE, null, ex);
+				}
+			}
+		});
+		
+		process.waitFor();
+		e1.shutdown();
+		e2.shutdown();
+		e3.shutdown();
+		process.destroy();
+	} catch (IOException err) {
+//		err.printStackTrace();
 		}
 	}
 	
@@ -187,7 +239,6 @@ public class Installer {
 			// get the corresponding jolie launcher script
 			String cmd = getLauncher( os, jolieDir );
 			cmd += " " + wdir + File.separator + "installer.ol " + os;
-			System.out.println( "\nLAUNCHING COMMAND:" + cmd + "\n" );
 			runCmd( cmd );
 			
 		} catch (InterruptedException ex) {

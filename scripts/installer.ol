@@ -52,24 +52,23 @@ define setLPProc
 }
 
 main
-{
+{  
   // sets the installer for this OS
   eInfo.type = "Jolie";
   eInfo.filepath = args[0] + "_installer.ol";
-  println@Console( "Trying to embed " + eInfo.filepath )();
   loadEmbeddedService@Runtime( eInfo )( OSInst.location );
 
-   unzipDist@OSInst()();
+  // unzipDist@OSInst()();
 
-   setJHProc;
-  	copyBins@OSInst( jh )();
-   println@Console( "Jolie is installed into path \"" + jh + "\"\n" )();
+  setJHProc;
+  copyBins@OSInst( jh )();
+  println@Console( "Jolie is installed into path \"" + jh + "\"\n" )();
 
-   while( !done ){
-     setLPProc;
-     copyLaunchers@OSInst( lp )( done )
-   };
+  while( !done ){
+   setLPProc;
+   copyLaunchers@OSInst( lp )( done )
+  };
 
-  	println@Console( "Jolie is installed, try running 'jolie' under a new shell" )()
+  println@Console( "Jolie is installed, try running 'jolie' under a new shell" )()
 }
 
