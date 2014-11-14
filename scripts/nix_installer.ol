@@ -59,9 +59,15 @@ main
 	[ getDJH()( DEFAULT_JOLIE_HOME ){ nullProcess }]{ nullProcess }
 	[ getDLP()( DEFAULT_LAUNCHERS_PATH ){ nullProcess }]{ nullProcess }
 	[ setJH( jh )(){
+		e = "sh";
+		e.args[#e.args] = "-c";
+		e.args[#e.args] = "'echo " + jh + "'";
+		exec@Exec( e )( e_res );
+		f = e_res;
+		trim@StringUtils( f )( f );
 		println@Console( "\nPlease, open a new shell and execute " + 
 			"the command below:\n" )();
-		println@Console( "echo 'export JOLIE_HOME=\"" + jh + 
+		println@Console( "echo 'export JOLIE_HOME=\"" + f + 
 			"\"' >> ~/.bash_profile" )()
 	} ]{ nullProcess }
 	[ copyBins( bin_folder )(){

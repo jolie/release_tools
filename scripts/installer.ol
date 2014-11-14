@@ -55,6 +55,9 @@ main
 {  
   // sets the installer for this OS
   eInfo.type = "Jolie";
+  if( args[0] == "macos" || args[0] == "linux" ) {
+    args[0] = "nix"
+  };
   eInfo.filepath = args[0] + "_installer.ol";
   loadEmbeddedService@Runtime( eInfo )( OSInst.location );
 
