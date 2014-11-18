@@ -128,7 +128,8 @@ public class Installer {
 //		return obj.toString();
 //	}
 //	
-	
+	// MODIFY THIS METHOD TO READ FROM THE PROPER JOLIE LAUNCHER AND MODIFY IT
+	// THE METHOD getLauncher ABOVE IS A STUB
 	private String getLauncher( String os, String jolieHome ){
 		
 		if( os.equals( "windows" ) ){
@@ -185,9 +186,9 @@ public class Installer {
 			public void run() {
 				try {
 					BufferedReader br = new BufferedReader( new InputStreamReader(stdin) );
-					String l;
-					while( ( l = br.readLine() ) != null ){
-						System.out.println( l );
+					int c;
+					while( ( c = br.read() ) != -1 ){
+						System.out.print( (char) c );
 					}
 					br.close();
 				} catch (IOException ex) {
@@ -201,9 +202,9 @@ public class Installer {
 			public void run() {
 				try {
 					BufferedReader br = new BufferedReader( new InputStreamReader( stderr) );
-					String l;
-					while( ( l = br.readLine() ) != null  ){
-						System.out.println( l );
+					int c;
+					while( ( c = br.read() ) != -1 ){
+						System.out.print( (char) c );
 					}
 					br.close();
 				} catch (IOException ex) {
