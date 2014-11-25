@@ -6,10 +6,13 @@ constants
 }
 
 interface InstInterface {
-  RequestResponse: 	getJH( void )( any ),
-  									getDJH( void )( string ),
-  									getDLP( void )( string ),
-  									setJH( string )( void ),
-  									copyBins( string )( void ),
-  									copyLaunchers( string )( bool ),
+RequestResponse:
+	getDJH( void )( string ),
+	getDLP( void )( string ),
+	copyBins( string )( void ),
+	copyLaunchers( string )( void ),
+	mkdir( string )( void ),
+	deleteDir( string )( void ),
+	normalisePath( string )( string ),
+	installationFinished( string )( void )
 }
