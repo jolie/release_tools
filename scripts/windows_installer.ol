@@ -103,7 +103,7 @@ main
 	[ copyLaunchers( l_folder )() {
 		e = "sh";
 		e.args[#e.args] = "-c";
-		e.args[#e.args] = "cp	-rp " + cd + "/" + DIST_FOLDER + "/" + LAUNCHERS_PATH + 
+		e.args[#e.args] = "cp -rp " + cd + "/" + DIST_FOLDER + "/" + LAUNCHERS_PATH + 
 		"/* " + l_folder;
 		e.waitFor = 1;
 		exec@Exec( e )( e_res )  
