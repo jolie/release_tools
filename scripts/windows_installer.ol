@@ -54,13 +54,7 @@ init
 main
 {
 	[ normalisePath( path )( path ) {
-		trim@StringUtils( path )( path );
-		e = "sh";
-		e.args[#e.args] = "-c";
-		e.args[#e.args] = "echo " + path;
-		exec@Exec( e )( result );
-		path = result;
-		trim@StringUtils( path )( path )
+		nullProcess
 	} ] { nullProcess }
 
 	[ getDJH()( DEFAULT_JOLIE_HOME ) { nullProcess } ] { nullProcess }
@@ -68,44 +62,35 @@ main
 	[ getDLP()( DEFAULT_LAUNCHERS_PATH ){ nullProcess } ]{ nullProcess }
 
 	[ installationFinished( jh )() {
-		println@Console( "\nPlease, open a new shell and execute " + 
-			"the command below:\n" )();
-		println@Console( "echo 'export JOLIE_HOME=\"" + jh + 
-			"\"' >> ~/.bash_profile" )()
+		e = "setx";
+		e.args[#e.args] = "JOLIE_HOME";
+		e.args[#e.args] = jh;
+		e.args[#e.args] = "/m";
+		e.waitFor = 1		
 	} ] { nullProcess }
 	
 	[ deleteDir( dir )() {
-		e = "sh";
-		e.args[#e.args] = "-c";
-		e.args[#e.args] = "rm -rf " + bin_folder;
-		e.waitFor = 1;
-		exec@Exec( e )( e_res )
+		deleteDir( bin_folder )( delete_resp );
+		if ( !delete_resp ) { throw( CannotDeleteBinFolder ) }
 	} ] { nullProcess }
 	
 	[ mkdir( dir )() {
-		e = "sh";
-		e.args[#e.args] = "-c";
-		e.args[#e.args] = "mkdir -p " + bin_folder;
-		e.waitFor = 1;
-		exec@Exec( e )( e_res )
+		mkdir( bin_folder )( delete_resp );
+		if ( !delete_resp ) { throw( CannotCreateBinFolder ) }		
 	} ] { nullProcess }
 
 	[ copyBins( bin_folder )(){
 		// copy the content of dist/jolie
-		e = "sh";
-		e.args[#e.args] = "-c";
-		e.args[#e.args] = "cp -rp " + cd + "/" + DIST_FOLDER + "/" + 
-			JOLIE_FOLDER + "/* " + bin_folder;
-		e.waitFor = 1;
-		exec@Exec( e )( e_res )
+		copy.from = cd + "/" + DIST_FOLDER + "/" + JOLIE_FOLDER + "/";
+		copy.to = bin_folder;
+		copyDir@File( copy )( copy_resp );
+		if ( !copy_resp ) { throw( CannotCopyBins ) }			
 	}]{ nullProcess }
 	
 	[ copyLaunchers( l_folder )() {
-		e = "sh";
-		e.args[#e.args] = "-c";
-		e.args[#e.args] = "cp -rp " + cd + "/" + DIST_FOLDER + "/" + LAUNCHERS_PATH + 
-		"/* " + l_folder;
-		e.waitFor = 1;
-		exec@Exec( e )( e_res )  
+		copy.from = cd + "/" + DIST_FOLDER + "/" + LAUNCHERS_PATH + "/";
+		copy.to = l_folder;
+		copyDir@File( copy )( copy_resp );
+		if ( !copy_resp ) { throw( CannotCopyLaunchers ) }		
 	}]{ nullProcess }
 }
