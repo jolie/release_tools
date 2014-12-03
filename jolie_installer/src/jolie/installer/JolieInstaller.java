@@ -30,7 +30,7 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class JolieInstaller
 {
-	public static void main( String[] args )
+	public static void main( String[] args ) throws Exception
 	{
 		try {
 			new Installer().run();

@@ -24,6 +24,8 @@ package jolie.installer;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,6 +36,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.channels.Channels;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
  *
@@ -43,6 +47,7 @@ public class Installer {
 
 	static final String windows = "windows";
 	static final String unix = "unix";
+	private final static int BUFFER_SIZE = 1024;
 		
 	private static void exec( File dir, String... args )
 		throws IOException, InterruptedException
@@ -93,13 +98,15 @@ public class Installer {
 	}
 
 	private File createTmpDist()
-		throws IOException, InterruptedException
+		throws IOException, InterruptedException, Exception
 	{
 		File tmp = createTmpDir();
 		copyDistZip( tmp );
-		exec( tmp, "unzip", "dist.zip" );
+//		exec( tmp, "unzip", "dist.zip" );
+		unzip( tmp.getAbsolutePath(), "dist.zip" );
 		copyInstallerScript( tmp );
-		exec( tmp, "unzip", "installer.zip" );
+//		exec( tmp, "unzip", "installer.zip" );
+		unzip( tmp.getAbsolutePath(), "installer.zip" );
 		return new File( tmp, "dist" );
 	}
 	
@@ -223,6 +230,38 @@ public class Installer {
 		}
 	}
 	
+	public  void unzip( String targetPath, String zipname ) throws Exception {
+	byte[] buffer = new byte[ BUFFER_SIZE ];
+	ZipInputStream zipInputStream;
+	try {
+		zipInputStream = new ZipInputStream(new FileInputStream( targetPath + File.separator + zipname ));				
+		ZipEntry zipEntry = zipInputStream.getNextEntry();
+		String filename;
+		while( zipEntry != null ) {
+			filename = zipEntry.getName();
+			if ( !zipEntry.isDirectory() ) {
+				File newFile = new File( targetPath + File.separator + filename );
+				new File(newFile.getParent()).mkdirs();
+				FileOutputStream fileOutputStream = new FileOutputStream(newFile);             
+				int len;
+				while ((len = zipInputStream.read(buffer)) > 0) {
+						fileOutputStream.write(buffer, 0, len);
+				}
+				fileOutputStream.close();   
+			}
+			zipEntry = zipInputStream.getNextEntry();				
+    }
+ 
+	zipInputStream.closeEntry();
+   	zipInputStream.close();
+				
+	} catch( FileNotFoundException ex ) {
+		throw new Exception("FileNotFound");
+	} catch( IOException ex ) {
+			throw new Exception("IOException");
+	}
+}
+	
 	private void runJolie( String wdir, String jolieDir ){
 		// get the os
 		String os = Helpers.getOperatingSystemType().toString().toLowerCase();
@@ -250,7 +289,7 @@ public class Installer {
 	public void run()
 		throws IOException, InterruptedException,
 		ClassNotFoundException, NoSuchMethodException,
-		IllegalAccessException, InvocationTargetException
+		IllegalAccessException, InvocationTargetException, Exception
 	{
 		File tmp = createTmpDist();
 		String jolieDir = new File( tmp, "jolie" ).getAbsolutePath();
