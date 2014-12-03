@@ -141,7 +141,7 @@ public class Installer {
 		
 		if( os.equals( "windows" ) ){
 			jolieHome = jolieHome + File.separator;
-			return "java -ea:jolie... -ea:joliex... -Xmx1G -jar" + jolieHome + "jolie.jar -l "
+			return "java -ea:jolie... -ea:joliex... -Xmx1G -jar " + jolieHome + "jolie.jar -l "
 					+ ".\\lib\\*;" + jolieHome + "lib;" + jolieHome + "javaServices\\*;"
 					+ jolieHome + "extensions\\* -i " + jolieHome + "include";
 		} else {
