@@ -145,7 +145,7 @@ public class Installer {
 					+ ".\\lib\\*;" + jolieHome + "lib;" + jolieHome + "javaServices\\*;"
 					+ jolieHome + "extensions\\* -i " + jolieHome + "include";
 		} else {
-			return "java -ea:jolie... -ea:joliex... -Xmx4G "
+			return "java -ea:jolie... -ea:joliex... -Xmx1G "
 					+ "-Djava.rmi.server.codebase=file:/" + jolieHome + "/extensions/rmi.jar -cp "
 					+ jolieHome + "/lib/libjolie.jar:" + jolieHome + "/jolie.jar jolie.Jolie "
 					+ "-l ./lib/*:" + jolieHome + "/lib:" + 
