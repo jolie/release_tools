@@ -70,12 +70,12 @@ main
 	} ] { nullProcess }
 	
 	[ deleteDir( dir )() {
-		deleteDir( bin_folder )( delete_resp );
+		deleteDir@File( bin_folder )( delete_resp );
 		if ( !delete_resp ) { throw( CannotDeleteBinFolder ) }
 	} ] { nullProcess }
 	
 	[ mkdir( dir )() {
-		mkdir( bin_folder )( delete_resp );
+		mkdir@File( bin_folder )( delete_resp );
 		if ( !delete_resp ) { throw( CannotCreateBinFolder ) }		
 	} ] { nullProcess }
 
