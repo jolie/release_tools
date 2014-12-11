@@ -138,7 +138,6 @@ public class Installer {
 	// MODIFY THIS METHOD TO READ FROM THE PROPER JOLIE LAUNCHER AND MODIFY IT
 	// THE METHOD getLauncher ABOVE IS A STUB
 	private String getLauncher( String os, String jolieHome ){
-		
 		if( os.equals( "windows" ) ){
 			jolieHome = jolieHome + File.separator;
 			return "java -ea:jolie... -ea:joliex... -Xmx1G -jar " + jolieHome + "jolie.jar -l "
@@ -279,6 +278,7 @@ public class Installer {
 			// get the corresponding jolie launcher script
 			String cmd = getLauncher( os, jolieDir );
 			cmd += " " + wdir + File.separator + "installer.ol " + os;
+			System.out.println( cmd );
 			runCmd( cmd );
 			
 		} catch (InterruptedException ex) {
