@@ -278,7 +278,6 @@ public class Installer {
 			// get the corresponding jolie launcher script
 			String cmd = getLauncher( os, jolieDir );
 			cmd += " " + wdir + File.separator + "installer.ol " + os;
-			System.out.println( cmd );
 			runCmd( cmd );
 			
 		} catch (InterruptedException ex) {
