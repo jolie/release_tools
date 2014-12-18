@@ -103,7 +103,7 @@ main
 	e.workingDirectory = "release";
 	e_arg = "-j";
 	e_arg = "installer.zip";
-	for( i=0, i<#lr.result, i++ ){
+	for( i = 0, i < #lr.result, i++ ) {
 		e_arg = "../" + lq.directory + "/" + lr.result[ i ]
 	};
 	exec;
