@@ -21,9 +21,6 @@
 
 package jolie.installer;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-
 /**
  *
  * @author Fabrizio Montesi
@@ -34,7 +31,7 @@ public class JolieInstaller
 	{
 		try {
 			new Installer().run();
-		} catch( IOException | InterruptedException | ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e ) {
+		} catch( Exception e ) {
 			e.printStackTrace();
 		}
 	}
