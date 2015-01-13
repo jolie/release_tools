@@ -81,7 +81,7 @@ main
 	[ deleteDir( dir )() {
 		e = "sh";
 		e.args[#e.args] = "-c";
-		e.args[#e.args] = "rm -rf " + bin_folder;
+		e.args[#e.args] = "rm -rf " + dir;
 		e.waitFor = 1;
 		exec@Exec( e )( e_res )
 	} ] { nullProcess }
@@ -89,7 +89,7 @@ main
 	[ mkdir( dir )() {
 		e = "sh";
 		e.args[#e.args] = "-c";
-		e.args[#e.args] = "mkdir -p " + bin_folder;
+		e.args[#e.args] = "mkdir -p " + dir;
 		e.waitFor = 1;
 		exec@Exec( e )( e_res )
 	} ] { nullProcess }
