@@ -62,20 +62,35 @@ main
 	[ getDLP()( DEFAULT_LAUNCHERS_PATH ){ nullProcess } ]{ nullProcess }
 
 	[ installationFinished( jh )() {
+		jh_str =  jh;
+		jh_str.suffix = "\\";
+		endsWith@StringUtils( jh_str )( backslash_ending );
+		if ( !backslash_ending ) {
+		      jh = jh + "\\"
+		};
 		e = "setx";
 		e.args[#e.args] = "JOLIE_HOME";
 		e.args[#e.args] = jh;
 		e.args[#e.args] = "/m";
-		e.waitFor = 1		
+		e.waitFor = 1;
+		exec@Exec( e )( e_res );		
+		if( e_res.exitCode == 0 ) {
+			// command succeeded
+			println@Console("Environment variable JOLIE_HOME created.")()
+		} else {
+			println@Console("Creation of variable JOLIE_HOME failed. Please manually add variable JOLIE_HOME=" + jh + " to your system environment")()
+		};
+		println@Console("IMPORTANT: remember to add the launchers path to your system environment PATH variable")()
+		
 	} ] { nullProcess }
 	
 	[ deleteDir( dir )() {
-		deleteDir@File( bin_folder )( delete_resp );
+		deleteDir@File( dir )( delete_resp );
 		if ( !delete_resp ) { throw( CannotDeleteBinFolder ) }
 	} ] { nullProcess }
 	
 	[ mkdir( dir )() {
-		mkdir@File( bin_folder )( delete_resp );
+		mkdir@File( dir )( delete_resp );
 		if ( !delete_resp ) { throw( CannotCreateBinFolder ) }		
 	} ] { nullProcess }
 
