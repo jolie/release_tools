@@ -35,7 +35,7 @@ execution{ concurrent }
 
 constants
 {
-	DEFAULT_JOLIE_HOME = "/opt/jolie",
+	DEFAULT_JOLIE_HOME = "/usr/lib/jolie",
 	DEFAULT_LAUNCHERS_PATH = "/usr/bin",
 	LAUNCHERS_PATH = "launchers/unix"
 }
