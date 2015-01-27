@@ -105,7 +105,7 @@ main
 	};
 	copyLaunchers@OSInst( lp )();
 	
-	println@Console( "\nJolie launcher executables installed in path " + jh + "\n" )();
+	println@Console( "\nJolie launcher executables installed in path " + lp + "\n" )();
 	
 	installationFinished@OSInst( jh )();
 
