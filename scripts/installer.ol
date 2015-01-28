@@ -39,7 +39,7 @@ define setJHProc
 		"\nInsert the path for the environment variable " + JOLIE_HOME + ".\n"
 		+ JOLIE_HOME + " indicates the directory in which the Jolie"
 		+ " libraries will be installed."
-		+ "\n[press Enter to use the default value: " + djh + "]\n\n > "
+		+ "\n[press Enter to use the default value: " + djh + "]\nPlease note that using spaces in paths may cause problems.\n\n > "
 	)();
 	in( jh );
 	trim@StringUtils( jh )( jh );
@@ -54,7 +54,7 @@ define setLPProc
 	getDLP@OSInst()( dlp );
 	print@Console(
 		"\nInsert the installation path for the Jolie launcher executables\n" + 
-		"[press Enter to use the default value: " + dlp + "]\n\n > "
+		"[press Enter to use the default value: " + dlp + "]\nPlease note that using spaces in paths may cause problems.\n\n > "
 	)();
 	in( lp );
 	trim@StringUtils( lp )( lp );

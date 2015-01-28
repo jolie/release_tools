@@ -31,8 +31,8 @@ execution{ concurrent }
 
 constants
 {
-	DEFAULT_JOLIE_HOME = "C:\\Program Files\\Jolie",
-	DEFAULT_LAUNCHERS_PATH = "C:\\Program Files\\Jolie",
+	DEFAULT_JOLIE_HOME = "C:\\Jolie",
+	DEFAULT_LAUNCHERS_PATH = "C:\\Windows\\system32",
 	LAUNCHERS_PATH = "launchers/windows"
 }
 
@@ -80,7 +80,7 @@ main
 		} else {
 			println@Console("Creation of variable JOLIE_HOME failed. Please manually add variable JOLIE_HOME=" + jh + " to your system environment")()
 		};
-		println@Console("IMPORTANT: remember to add the launchers path to your system environment PATH variable")()
+		println@Console("IMPORTANT: if you chose a custom installation directory for the launchers, remember to add this directory to your system environment PATH variable")()
 		
 	} ] { nullProcess }
 	
