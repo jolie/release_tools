@@ -98,7 +98,7 @@ main
 		// copy the content of dist/jolie
 		e = "sh";
 		e.args[#e.args] = "-c";
-		e.args[#e.args] = "cp -rp " + cd + "/" + DIST_FOLDER + "/" + 
+		e.args[#e.args] = lst = "cp -rp " + cd + "/" + DIST_FOLDER + "/" + 
 			JOLIE_FOLDER + "/* " + bin_folder;
 		e.waitFor = 1;
 		exec@Exec( e )( e_res )
@@ -110,6 +110,6 @@ main
 		e.args[#e.args] = "cp -rp " + cd + "/" + DIST_FOLDER + "/" + LAUNCHERS_PATH + 
 		"/* " + l_folder;
 		e.waitFor = 1;
-		exec@Exec( e )( e_res )  
+		exec@Exec( e )( e_res )
 	}]{ nullProcess }
 }

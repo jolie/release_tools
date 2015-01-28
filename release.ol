@@ -75,7 +75,7 @@ main
 	recreateReleaseDir;	
 
 	e = "cp";
-	e_arg = "-Rp";
+	e_arg = "-rp";
 	e_arg = args[0] + "/dist";
 	e_arg = ReleaseDir + "/dist";
 	e.waitFor = 1;

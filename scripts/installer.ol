@@ -53,7 +53,7 @@ define setLPProc
 {
 	getDLP@OSInst()( dlp );
 	print@Console(
-		"\nInsert the installation for the Jolie launcher executables\n" + 
+		"\nInsert the installation path for the Jolie launcher executables\n" + 
 		"[press Enter to use the default value: " + dlp + "]\n\n > "
 	)();
 	in( lp );
@@ -91,9 +91,15 @@ main
 		};
 		if ( decision == "y" ) {
 			println@Console( "\nDeleting directory " + jh )();
-			deleteDir@OSInst( jh )()
+			deleteDir@OSInst( jh )();
+			println@Console( "\nDirectory " + jh + " does not exist. It has now been created." )();
+			mkdir@OSInst( jh )()
 		}
-	};
+	} else { 
+		println@Console( "\nDirectory " + jh + " does not exist. It has now been created." )();
+		mkdir@OSInst( jh )() 
+	} ;
+
 	copyBins@OSInst( jh )();
 	println@Console( "\nJolie libraries installed in path " + jh + "\n" )();
 

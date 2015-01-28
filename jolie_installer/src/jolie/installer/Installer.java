@@ -48,6 +48,7 @@ public class Installer {
 	static final String windows = "windows";
 	static final String unix = "unix";
 	private final static int BUFFER_SIZE = 1024;
+	private final String os = Helpers.getOperatingSystemType().toString().toLowerCase();
 		
 	private static void exec( File dir, String... args )
 		throws IOException, InterruptedException
@@ -102,11 +103,15 @@ public class Installer {
 	{
 		File tmp = createTmpDir();
 		copyDistZip( tmp );
-//		exec( tmp, "unzip", "dist.zip" );
-		unzip( tmp.getAbsolutePath(), "dist.zip" );
+		if ( os.equals("windows")) { unzip( tmp.getAbsolutePath(), "dist.zip" ); } 
+			else { exec( tmp, "unzip", "dist.zip" ); }
+		
 		copyInstallerScript( tmp );
-//		exec( tmp, "unzip", "installer.zip" );
-		unzip( tmp.getAbsolutePath(), "installer.zip" );
+
+		if ( os.equals("windows")){
+			unzip( tmp.getAbsolutePath(), "installer.zip" );
+		} else { exec( tmp, "unzip", "installer.zip" ); }	
+		
 		return new File( tmp, "dist" );
 	}
 	
@@ -262,8 +267,6 @@ public class Installer {
 }
 	
 	private void runJolie( String wdir, String jolieDir ){
-		// get the os
-		String os = Helpers.getOperatingSystemType().toString().toLowerCase();
 //		String ext = "";
 //		String replaceVar;
 		
