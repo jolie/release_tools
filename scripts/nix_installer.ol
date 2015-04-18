@@ -72,10 +72,15 @@ main
 	[ getDLP()( DEFAULT_LAUNCHERS_PATH ){ nullProcess } ]{ nullProcess }
 
 	[ installationFinished( jh )() {
-		println@Console( "\nPlease, open a new shell and execute " + 
-			"the command below:\n" )();
-		println@Console( "echo 'export JOLIE_HOME=\"" + jh + 
-			"\"' >> ~/.bash_profile" )()
+		println@Console( "\n"
+			+ "Please, open a new shell and execute command\n"
+	 		+	"  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n"
+	 		+ "  V V V V V V V V V V V V V V V V V V V V V V V V V V V V V V V\n\n"
+	 		+ "  echo 'export JOLIE_HOME=\"" + jh + "\"' >> ~/.bash_profile" 
+	 		+ "\n\n"
+	 		+	"  ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^\n"
+	 		+ "  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - "
+		)()
 	} ] { nullProcess }
 	
 	[ deleteDir( dir )() {
