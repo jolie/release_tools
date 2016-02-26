@@ -5,12 +5,14 @@ constants
 	JOLIE_FOLDER = "jolie"
 }
 
+type ErrorType: void { .message: string }
+
 interface InstInterface {
 RequestResponse:
 	getDJH( void )( string ),
 	getDLP( void )( string ),
-	copyBins( string )( void ),
-	copyLaunchers( string )( void ),
+	copyBins( string )( void ) throws CannotCopyBins( ErrorType ),
+	copyLaunchers( string )( void ) throws CannotCopyInstallers( ErrorType ),
 	mkdir( string )( void ),
 	deleteDir( string )( void ),
 	normalisePath( string )( string ),

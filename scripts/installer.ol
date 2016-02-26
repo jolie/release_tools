@@ -25,10 +25,11 @@ include "runtime.iol"
 include "exec.iol"
 include "file.iol"
 include "string_utils.iol"
+include "time.iol"
 
 include "inst_interface.iol"
 
-outputPort OSInst{  
+outputPort OSInst{
 Interfaces: InstInterface
 }
 
@@ -53,7 +54,7 @@ define setLPProc
 {
 	getDLP@OSInst()( dlp );
 	print@Console(
-		"\nInsert the installation path for the Jolie launcher executables\n" + 
+		"\nInsert the installation path for the Jolie launcher executables\n" +
 		"[press Enter to use the default value: " + dlp + "]\nPlease note that using spaces in paths may cause problems.\n\n > "
 	)();
 	in( lp );
@@ -65,7 +66,7 @@ define setLPProc
 }
 
 main
-{  
+{
 	// sets the installer for this OS
 	eInfo.type = "Jolie";
 	if( args[0] == "macos" || args[0] == "linux" ) {
@@ -95,12 +96,18 @@ main
 			println@Console( "\nDirectory " + jh + " does not exist. It has now been created." )();
 			mkdir@OSInst( jh )()
 		}
-	} else { 
+	} else {
 		println@Console( "\nDirectory " + jh + " does not exist. It has now been created." )();
-		mkdir@OSInst( jh )() 
+		mkdir@OSInst( jh )()
 	} ;
 
+	install ( CannotCopyBins => 
+		sleep@Time( 1000 )();
+		println@Console( main.CannotCopyBins.message )();
+		throw( FaultInstallation )
+	);
 	copyBins@OSInst( jh )();
+		
 	println@Console( "\nJolie libraries installed in path " + jh + "\n" )();
 
 	setLPProc;
@@ -109,12 +116,17 @@ main
 		println@Console( "\nDirectory " + lp + " does not exist. It has now been created." )();
 		mkdir@OSInst( lp )()
 	};
+	
+	install ( CannotCopyInstallers => 
+		sleep@Time( 1000 )();
+		println@Console( main.CannotCopyInstallers.message )(); 
+		throw( FaultInstallation )
+	);
 	copyLaunchers@OSInst( lp )();
-	
+
 	println@Console( "\nJolie launcher executables installed in path " + lp + "\n" )();
-	
+
 	installationFinished@OSInst( jh )();
 
 	println@Console( "\nJolie is installed. Try running 'jolie' under a new shell [press Enter to exit]" )()
 }
-

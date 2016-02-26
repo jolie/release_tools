@@ -33,7 +33,8 @@ constants
 {
 	DEFAULT_JOLIE_HOME = "C:\\Jolie",
 	DEFAULT_LAUNCHERS_PATH = "C:\\Windows\\system32",
-	LAUNCHERS_PATH = "launchers/windows"
+	LAUNCHERS_PATH = "launchers/windows",
+	ADMIN_ERROR = "Error: the installer could not find the launchers files. To complete the installation, try to run the installer with administrator privileges."
 }
 
 inputPort In {
@@ -73,7 +74,7 @@ main
 		e.args[#e.args] = jh;
 		e.args[#e.args] = "/m";
 		e.waitFor = 1;
-		exec@Exec( e )( e_res );		
+		exec@Exec( e )( e_res );
 		if( e_res.exitCode == 0 ) {
 			// command succeeded
 			println@Console("Environment variable JOLIE_HOME created.")()
@@ -81,31 +82,37 @@ main
 			println@Console("Creation of variable JOLIE_HOME failed. Please manually add variable JOLIE_HOME=" + jh + " to your system environment")()
 		};
 		println@Console("IMPORTANT: if you chose a custom installation directory for the launchers, remember to add this directory to your system environment PATH variable")()
-		
+
 	} ] { nullProcess }
-	
+
 	[ deleteDir( dir )() {
 		deleteDir@File( dir )( delete_resp );
 		if ( !delete_resp ) { throw( CannotDeleteBinFolder ) }
 	} ] { nullProcess }
-	
+
 	[ mkdir( dir )() {
 		mkdir@File( dir )( delete_resp );
-		if ( !delete_resp ) { throw( CannotCreateBinFolder ) }		
+		if ( !delete_resp ) { throw( CannotCreateBinFolder ) }
 	} ] { nullProcess }
 
 	[ copyBins( bin_folder )(){
-		// copy the content of dist/jolie
-		copy.from = cd + "/" + DIST_FOLDER + "/" + JOLIE_FOLDER + "/";
-		copy.to = bin_folder;
-		copyDir@File( copy )( copy_resp );
-		if ( !copy_resp ) { throw( CannotCopyBins ) }			
+		scope ( s ){
+			install ( FileNotFound => throw( CannotCopyBins, { .message = ADMIN_ERROR } ) );
+			// copy the content of dist/jolie
+			copy.from = cd + "/" + DIST_FOLDER + "/" + JOLIE_FOLDER + "/";
+			copy.to = bin_folder;
+			copyDir@File( copy )( copy_resp );
+			if ( !copy_resp ) { throw( FileNotFound ) }
+		}
 	}]{ nullProcess }
-	
+
 	[ copyLaunchers( l_folder )() {
-		copy.from = cd + "/" + DIST_FOLDER + "/" + LAUNCHERS_PATH + "/";
-		copy.to = l_folder;
-		copyDir@File( copy )( copy_resp );
-		if ( !copy_resp ) { throw( CannotCopyLaunchers ) }		
+		scope ( s ){
+			install ( FileNotFound => throw( CannotCopyInstallers, { .message = ADMIN_ERROR } ) );
+			copy.from = cd + "/" + DIST_FOLDER + "/" + LAUNCHERS_PATH + "/";
+			copy.to = l_folder;
+			copyDir@File( copy )( copy_resp );
+			if ( !copy_resp ) { throw( FileNotFound ) }
+		}
 	}]{ nullProcess }
 }
