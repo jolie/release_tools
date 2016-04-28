@@ -223,12 +223,13 @@ public class Installer {
 				}
 			}
 		});
-		
+
 		process.waitFor();
 		e1.shutdown();
 		e2.shutdown();
 		e3.shutdown();
 		process.destroy();
+
 	} catch (IOException err) {
 //		err.printStackTrace();
 		}
@@ -320,7 +321,7 @@ public class Installer {
 		char fs = File.separatorChar;
 		
 		runJolie( tmp.getParent(), jolieDir, args );
-		
+
 //		URL[] urls = new URL[] { new URL( "file:" + jolieDir + fs + "jolie.jar" ), new URL( "file:" + jolieDir + fs + "lib" + fs + "libjolie.jar" ) };
 //		ClassLoader cl = new URLClassLoader( urls, Installer.class.getClassLoader() );
 //		Class<?> jolieClass = cl.loadClass( "jolie.Jolie" );

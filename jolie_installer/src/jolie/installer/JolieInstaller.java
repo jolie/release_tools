@@ -31,6 +31,7 @@ public class JolieInstaller
 	{
 		try {
 			new Installer().run(args);
+			System.exit(0); // installer keeps hanging around after the sub process has been stopped?
 		} catch( Exception e ) {
 			e.printStackTrace();
 		}
