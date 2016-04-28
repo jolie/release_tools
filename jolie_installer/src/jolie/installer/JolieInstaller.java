@@ -30,7 +30,7 @@ public class JolieInstaller
 	public static void main( String[] args ) throws Exception
 	{
 		try {
-			new Installer().run();
+			new Installer().run(args);
 		} catch( Exception e ) {
 			e.printStackTrace();
 		}

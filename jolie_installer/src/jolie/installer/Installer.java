@@ -265,8 +265,27 @@ public class Installer {
 			throw new Exception("IOException");
 	}
 }
+
+	/**
+	 * Produces a whitespace separated argument string for parsing to the installer script
+	 * @param args program arguments
+	 * @return whitespace separated argument string or a empty string if no arguments
+     */
+	private String argumentBuilder(String[] args) {
+		if (args != null && args.length > 0) {
+			StringBuilder argsList = new StringBuilder();
+			for (int i = 0; i < args.length; ++i) {
+				argsList.append(args[0]);
+				if (i < args.length - 1) { // we don't like spaces at the end
+					argsList.append(" ");
+				}
+			}
+			return argsList.toString();
+		}
+		return "";
+	}
 	
-	private void runJolie( String wdir, String jolieDir ){
+	private void runJolie( String wdir, String jolieDir, String[] args ){
 //		String ext = "";
 //		String replaceVar;
 		
@@ -278,9 +297,12 @@ public class Installer {
 //		}
 		
 		try {
-			// get the corresponding jolie launcher script
-			String cmd = getLauncher( os, jolieDir );
-			cmd += " " + wdir + File.separator + "installer.ol " + os;
+			String arguments, cmd;
+			cmd = getLauncher( os, jolieDir ); // get the corresponding jolie launcher script
+			arguments = argumentBuilder(args); // build argument string
+
+			cmd += " " + wdir + File.separator + "installer.ol " + os + " " + arguments;
+
 			runCmd( cmd );
 			
 		} catch (InterruptedException ex) {
@@ -288,7 +310,7 @@ public class Installer {
 		}
 	}
 		
-	public void run()
+	public void run(String[] args)
 		throws IOException, InterruptedException,
 		ClassNotFoundException, NoSuchMethodException,
 		IllegalAccessException, InvocationTargetException, Exception
@@ -297,7 +319,7 @@ public class Installer {
 		String jolieDir = new File( tmp, "jolie" ).getAbsolutePath();
 		char fs = File.separatorChar;
 		
-		runJolie( tmp.getParent(), jolieDir );
+		runJolie( tmp.getParent(), jolieDir, args );
 		
 //		URL[] urls = new URL[] { new URL( "file:" + jolieDir + fs + "jolie.jar" ), new URL( "file:" + jolieDir + fs + "lib" + fs + "libjolie.jar" ) };
 //		ClassLoader cl = new URLClassLoader( urls, Installer.class.getClassLoader() );
