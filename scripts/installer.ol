@@ -176,7 +176,7 @@ main
 		if ( nonStop ) {
 			println@Console("\nJolie is installed.")()
 		} else {
-			println@Console("\nJolie is installed. Try running 'jolie' under a new shell [press Enter to exit]")()
+			println@Console("\nJolie is installed. Try running 'jolie' under a new shell")()
 		}
 	} else {
 		println@Console(
