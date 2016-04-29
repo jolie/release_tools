@@ -34,6 +34,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.channels.Channels;
+import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.zip.ZipEntry;
@@ -272,13 +273,13 @@ public class Installer {
 	 * @param args program arguments
 	 * @return whitespace separated argument string or a empty string if no arguments
      */
-	private String argumentBuilder(String[] args) {
-		if (args != null && args.length > 0) {
+	private String argumentBuilder( String[] args ) {
+		if ( args != null && args.length > 0 ) {
 			StringBuilder argsList = new StringBuilder();
-			for (int i = 0; i < args.length; ++i) {
-				argsList.append(args[0]);
-				if (i < args.length - 1) { // we don't like spaces at the end
-					argsList.append(" ");
+			for ( int i = 0; i < args.length; ++i ) {
+				argsList.append( args[i] );
+				if ( i < args.length - 1 ) { // we don't like spaces at the end
+					argsList.append( " " );
 				}
 			}
 			return argsList.toString();
@@ -300,7 +301,7 @@ public class Installer {
 		try {
 			String arguments, cmd;
 			cmd = getLauncher( os, jolieDir ); // get the corresponding jolie launcher script
-			arguments = argumentBuilder(args); // build argument string
+			arguments = argumentBuilder( args ); // build argument string
 
 			cmd += " " + wdir + File.separator + "installer.ol " + os + " " + arguments;
 
@@ -319,7 +320,7 @@ public class Installer {
 		File tmp = createTmpDist();
 		String jolieDir = new File( tmp, "jolie" ).getAbsolutePath();
 		char fs = File.separatorChar;
-		
+
 		runJolie( tmp.getParent(), jolieDir, args );
 
 //		URL[] urls = new URL[] { new URL( "file:" + jolieDir + fs + "jolie.jar" ), new URL( "file:" + jolieDir + fs + "lib" + fs + "libjolie.jar" ) };

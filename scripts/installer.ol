@@ -87,8 +87,7 @@ define getArguments
 		} else if ( args[i] == "-h" || args[i] == "--help" || args[i] == "/h" || args[i] == "/help" ) {
 			showHelp = true	
 		} else {
-			// Argument not understood
-			interactive = false
+			showHelp = true
 		}
 	}
 }
@@ -158,9 +157,7 @@ main
 				}	
 			} else {
 				// non-stop, non-interactive install mode
-				print@Console(
-					"\nDirectory " + jh + " already exists.\n\n"
-				)()
+				print@Console( "\nDirectory " + jh + " already exists.\n\n" )()
 			}
 		} else {
 			println@Console( "\nDirectory " + jh + " does not exist. It has now been created." )();
@@ -196,9 +193,9 @@ main
 		installationFinished@OSInst( jh )();
 
 		if ( interactive ) {
-			println@Console("\nJolie is installed. Try running 'jolie' under a new shell")()
+			println@Console( "\nJolie is installed. Try running 'jolie' under a new shell" )()
 		} else {
-			println@Console("\nJolie is installed.")()
+			println@Console( "\nJolie is installed." )()
 		}
 	}
 }
