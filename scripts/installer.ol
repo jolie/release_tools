@@ -36,7 +36,7 @@ Interfaces: InstInterface
 define setJHProc
 {
 	getDJH@OSInst()( djh );
-	if ( !nonStop ) {
+	if ( interactive ) {
 		print@Console(
 		"\nInsert the path for the environment variable " + JOLIE_HOME + ".\n"
 		+ JOLIE_HOME + " indicates the directory in which the Jolie"
@@ -57,7 +57,7 @@ define setJHProc
 define setLPProc
 {
 	getDLP@OSInst()( dlp );
-	if ( !nonStop ) {
+	if ( interactive ) {
 		print@Console(
 			"\nInsert the installation path for the Jolie launcher executables\n" +
 			"[press Enter to use the default value: " + dlp + "]\nPlease note that using spaces in paths may cause problems.\n\n > "
@@ -80,14 +80,15 @@ define setLPProc
  */ 
 define getArguments
 {
+	interactive = true;
 	for ( i = 1, i < #args, ++i ) {
 		if ( args[i] == "-y" || args[i] == "/y" ) {
-			nonStop = true
+			interactive = false
 		} else if ( args[i] == "-h" || args[i] == "--help" || args[i] == "/h" || args[i] == "/help" ) {
 			showHelp = true	
 		} else {
 			// Argument not understood
-			showHelp = true
+			interactive = false
 		}
 	}
 }
@@ -101,8 +102,29 @@ main
 	};
 	getArguments;
 
-	if (!showHelp) {
-		if ( nonStop ) {
+	if ( showHelp ) {
+		println@Console(
+			"Jolie installer\n\nUsage:\njava -jar <Jolie installer jar> [options...]\n\n" +
+			"Following options are available:"
+			)();
+		if (args[0] == "nix") {
+			println@Console( 
+				"    -h | --help\t Show this help message\n" +
+				"    -y\t Run the installer in non-interactive mode (Note: This does not set the environmental variable JOLIE_HOME, do this manually)\n" 
+			)()
+		} else {
+			// windows cmd
+			println@Console( 
+				"    /h | /help\t Show this help message\n" +
+				"    /y\t Run the installer in non-interactive mode\n" 
+			)()
+		};
+		println@Console(
+			"See http://http://jolie-lang.org/downloads.html for further details"
+			)()
+
+	} else {
+		if ( !interactive ) {
 			println@Console("Starting install in non-stop; non-interactive mode.\n")()	
 		};
 
@@ -117,7 +139,7 @@ main
 		
 		exists@File( jh )( exists );
 		if ( exists ) {
-			if ( !nonStop ) {
+			if ( interactive ) {
 				// interactive 'normal' install mode 
 				print@Console(
 				"\nThe target installation directory " + jh + " already exists.\n"
@@ -173,30 +195,10 @@ main
 
 		installationFinished@OSInst( jh )();
 
-		if ( nonStop ) {
-			println@Console("\nJolie is installed.")()
-		} else {
+		if ( interactive ) {
 			println@Console("\nJolie is installed. Try running 'jolie' under a new shell")()
-		}
-	} else {
-		println@Console(
-			"Jolie installer\n\nUsage:\njava -jar <Jolie installer jar> [options...]\n\n" +
-			"Following options are available:"
-			)();
-		if (args[0] == "nix") {
-			println@Console( 
-				"    -h | --help\t Show this help message\n" +
-				"    -y\t Run the installer in non-interactive mode (Note: This does not set the environmental variable JOLIE_HOME, do this manually)\n" 
-			)()
 		} else {
-			// windows cmd
-			println@Console( 
-				"    /h | /help\t Show this help message\n" +
-				"    /y\t Run the installer in non-interactive mode\n" 
-			)()
-		};
-		println@Console(
-			"See http://http://jolie-lang.org/downloads.html for further details"
-			)()
+			println@Console("\nJolie is installed.")()
+		}
 	}
 }
