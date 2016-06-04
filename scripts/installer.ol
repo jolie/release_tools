@@ -36,7 +36,7 @@ Interfaces: InstInterface
 define setJHProc
 {
 	getDJH@OSInst()( djh );
-	if ( interactive ) {
+	if ( !is_defined( jh ) ) {
 		print@Console(
 		"\nInsert the path for the environment variable " + JOLIE_HOME + ".\n"
 		+ JOLIE_HOME + " indicates the directory in which the Jolie"
@@ -48,8 +48,6 @@ define setJHProc
 		if ( jh == "" ) {
 			jh = djh
 		}	
-	} else {
-		jh = djh
 	};
 	normalisePath@OSInst( jh )( jh )
 }
@@ -57,7 +55,7 @@ define setJHProc
 define setLPProc
 {
 	getDLP@OSInst()( dlp );
-	if ( interactive ) {
+	if ( !is_defined( lp ) ) {
 		print@Console(
 			"\nInsert the installation path for the Jolie launcher executables\n" +
 			"[press Enter to use the default value: " + dlp + "]\nPlease note that using spaces in paths may cause problems.\n\n > "
@@ -67,8 +65,6 @@ define setLPProc
 		if ( lp == "" ) {
 			lp = dlp
 		}
-	} else {
-		lp = dlp
 	};
 	normalisePath@OSInst( lp )( lp )
 }
@@ -80,11 +76,22 @@ define setLPProc
  */ 
 define getArguments
 {
-	interactive = true;
 	for ( i = 1, i < #args, ++i ) {
-		if ( args[i] == "-y" || args[i] == "/y" ) {
-			interactive = false
-		} else if ( args[i] == "-h" || args[i] == "--help" || args[i] == "/h" || args[i] == "/help" ) {
+		if ( args[ i ] == "-jh" || args[ i ] == "--jolie-home" || args[ i ] == "/jh" || args[ i ] == "/jolie-home" ) {
+			if ( !is_defined( args[ i + 1 ] ) ) {
+				showHelp = true
+			} else {
+				jh = args[ i + 1 ];
+				i += 1	
+			}
+		} else if ( args[ i ] == "-jl" || args[ i ] == "--jolie-launchers" || args[ i ] == "/jl" || args[ i ] == "/jolie-launchers" ) {
+			if ( !is_defined( args[ i + 1 ] ) ) {
+				showHelp = true
+			} else {
+				lp = args[ i + 1 ];
+				i += 1
+			}
+		} else if ( args[ i ] == "-h" || args[ i ] == "--help" || args[ i ] == "/h" || args[ i ] == "/help" ) {
 			showHelp = true	
 		} else {
 			showHelp = true
@@ -109,13 +116,15 @@ main
 		if (args[0] == "nix") {
 			println@Console( 
 				"    -h | --help\t Show this help message\n" +
-				"    -y\t Run the installer in non-interactive mode (Note: This does not set the environmental variable JOLIE_HOME, do this manually)\n" 
+				"    -jh <path> | --jolie-home <path>\t Set the installation path for the Jolie liberary files\n" +
+				"    -jl <path> | --jolie-launchers <path>\t Set the installation path for the Jolie launcher executables\n" 
 			)()
 		} else {
 			// windows cmd
 			println@Console( 
 				"    /h | /help\t Show this help message\n" +
-				"    /y\t Run the installer in non-interactive mode\n" 
+				"    /jh <path> | /jolie-home <path>\t Set the installation path for the Jolie liberary files\n" +
+				"    /jl <path> | /jolie-launchers <path>\t Set the installation path for the Jolie launcher executables\n" 
 			)()
 		};
 		println@Console(
@@ -123,9 +132,6 @@ main
 			)()
 
 	} else {
-		if ( !interactive ) {
-			println@Console("Starting install in non-stop; non-interactive mode.\n")()	
-		};
 
 		eInfo.filepath = args[0] + "_installer.ol";
 		loadEmbeddedService@Runtime( eInfo )( OSInst.location );
@@ -138,27 +144,22 @@ main
 		
 		exists@File( jh )( exists );
 		if ( exists ) {
-			if ( interactive ) {
-				// interactive 'normal' install mode 
-				print@Console(
-				"\nThe target installation directory " + jh + " already exists.\n"
-				+ "Delete it before proceeding? [y/N]\n\n > "
-				)();
-				in( decision );
-				while( decision != "y" && decision != "" && decision != "n" ) {
-					print@Console( "\nOption not understood, please choose y or n.\n\n >" )();
-					in( decision )
-				};
-				if ( decision == "y" ) {
-					println@Console( "\nDeleting directory " + jh )();
-					deleteDir@OSInst( jh )();
-					println@Console( "\nDirectory " + jh + " does not exist. It has now been created." )();
-					mkdir@OSInst( jh )()
-				}	
-			} else {
-				// non-stop, non-interactive install mode
-				print@Console( "\nDirectory " + jh + " already exists.\n\n" )()
-			}
+			// interactive 'normal' install mode 
+			print@Console(
+			"\nThe target installation directory " + jh + " already exists.\n"
+			+ "Delete it before proceeding? [y/N]\n\n > "
+			)();
+			in( decision );
+			while( decision != "y" && decision != "" && decision != "n" ) {
+				print@Console( "\nOption not understood, please choose y or n.\n\n >" )();
+				in( decision )
+			};
+			if ( decision == "y" ) {
+				println@Console( "\nDeleting directory " + jh )();
+				deleteDir@OSInst( jh )();
+				println@Console( "\nDirectory " + jh + " does not exist. It has now been created." )();
+				mkdir@OSInst( jh )()
+			}	
 		} else {
 			println@Console( "\nDirectory " + jh + " does not exist. It has now been created." )();
 			mkdir@OSInst( jh )()
