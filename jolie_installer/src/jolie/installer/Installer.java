@@ -34,6 +34,8 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.channels.Channels;
+import java.nio.file.Paths;
+import java.nio.file.InvalidPathException;
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -286,6 +288,32 @@ public class Installer {
 		}
 		return "";
 	}
+
+	/**
+	 * Validates the arguments parsed to the installer.
+	 * Validation at this level is used to check whether argument to options fulfils certain formats
+	 * ( such as path having no invalid characters in them etc. ).
+	 * @throws IllegalArgumentException when a invalid argument is supplied
+	 */
+	private void validateArguments( String[] args ) throws IllegalArgumentException {
+		if ( args != null && args.length > 0 ) {
+			String path;
+			for ( int i = 0; i < args.length; ++i ) {
+				if ( ( args[ i ] == "-jh" || args[ i ] == "--jolie-home" || args[ i ] == "/jh" || args[ i ] == "/jolie-home" ) ||
+				    ( args[ i ] == "-jl" || args[ i ] == "--jolie-launchers" || args[ i ] == "/jl" || args[ i ] == "/jolie-launchers" ) ) {
+					if ( args[i + 1] != null ) {
+						i++;
+						path = args[i];
+						try {
+							Paths.get( path );
+						} catch( InvalidPathException exception ) {
+							throw new IllegalArgumentException( "Path contains invalid characters or is not a path" );
+						}	
+					}
+				}
+			}
+		}
+	}
 	
 	private void runJolie( String wdir, String jolieDir, String[] args ){
 //		String ext = "";
@@ -302,6 +330,13 @@ public class Installer {
 			String arguments, cmd;
 			cmd = getLauncher( os, jolieDir ); // get the corresponding jolie launcher script
 			arguments = argumentBuilder( args ); // build argument string
+
+			try {
+				validateArguments( args );
+			} catch ( IllegalArgumentException iae ) {
+				System.err.println( "Error: Bad arguments: " + iae.getMessage() );
+				System.exit(1);
+			}
 
 			cmd += " " + wdir + File.separator + "installer.ol " + os + " " + arguments;
 
