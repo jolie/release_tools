@@ -34,6 +34,9 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.channels.Channels;
+import java.nio.file.Paths;
+import java.nio.file.InvalidPathException;
+import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.zip.ZipEntry;
@@ -223,12 +226,13 @@ public class Installer {
 				}
 			}
 		});
-		
+
 		process.waitFor();
 		e1.shutdown();
 		e2.shutdown();
 		e3.shutdown();
 		process.destroy();
+
 	} catch (IOException err) {
 //		err.printStackTrace();
 		}
@@ -265,8 +269,53 @@ public class Installer {
 			throw new Exception("IOException");
 	}
 }
+
+	/**
+	 * Produces a whitespace separated argument string for parsing to the installer script
+	 * @param args program arguments
+	 * @return whitespace separated argument string or a empty string if no arguments
+     */
+	private String argumentBuilder( String[] args ) {
+		if ( args != null && args.length > 0 ) {
+			StringBuilder argsList = new StringBuilder();
+			for ( int i = 0; i < args.length; ++i ) {
+				argsList.append( args[i] );
+				if ( i < args.length - 1 ) { // we don't like spaces at the end
+					argsList.append( " " );
+				}
+			}
+			return argsList.toString();
+		}
+		return "";
+	}
+
+	/**
+	 * Validates the arguments parsed to the installer.
+	 * Validation at this level is used to check whether argument to options fulfils certain formats
+	 * ( such as path having no invalid characters in them etc. ).
+	 * @throws IllegalArgumentException when a invalid argument is supplied
+	 */
+	private void validateArguments( String[] args ) throws IllegalArgumentException {
+		if ( args != null && args.length > 0 ) {
+			String path;
+			for ( int i = 0; i < args.length; ++i ) {
+				if ( ( args[ i ] == "-jh" || args[ i ] == "--jolie-home" || args[ i ] == "/jh" || args[ i ] == "/jolie-home" ) ||
+				    ( args[ i ] == "-jl" || args[ i ] == "--jolie-launchers" || args[ i ] == "/jl" || args[ i ] == "/jolie-launchers" ) ) {
+					if ( args[i + 1] != null ) {
+						i++;
+						path = args[i];
+						try {
+							Paths.get( path );
+						} catch( InvalidPathException exception ) {
+							throw new IllegalArgumentException( "Path contains invalid characters or is not a path" );
+						}	
+					}
+				}
+			}
+		}
+	}
 	
-	private void runJolie( String wdir, String jolieDir ){
+	private void runJolie( String wdir, String jolieDir, String[] args ){
 //		String ext = "";
 //		String replaceVar;
 		
@@ -278,9 +327,19 @@ public class Installer {
 //		}
 		
 		try {
-			// get the corresponding jolie launcher script
-			String cmd = getLauncher( os, jolieDir );
-			cmd += " " + wdir + File.separator + "installer.ol " + os;
+			String arguments, cmd;
+			cmd = getLauncher( os, jolieDir ); // get the corresponding jolie launcher script
+			arguments = argumentBuilder( args ); // build argument string
+
+			try {
+				validateArguments( args );
+			} catch ( IllegalArgumentException iae ) {
+				System.err.println( "Error: Bad arguments: " + iae.getMessage() );
+				System.exit(1);
+			}
+
+			cmd += " " + wdir + File.separator + "installer.ol " + os + " " + arguments;
+
 			runCmd( cmd );
 			
 		} catch (InterruptedException ex) {
@@ -288,7 +347,7 @@ public class Installer {
 		}
 	}
 		
-	public void run()
+	public void run(String[] args)
 		throws IOException, InterruptedException,
 		ClassNotFoundException, NoSuchMethodException,
 		IllegalAccessException, InvocationTargetException, Exception
@@ -296,9 +355,9 @@ public class Installer {
 		File tmp = createTmpDist();
 		String jolieDir = new File( tmp, "jolie" ).getAbsolutePath();
 		char fs = File.separatorChar;
-		
-		runJolie( tmp.getParent(), jolieDir );
-		
+
+		runJolie( tmp.getParent(), jolieDir, args );
+
 //		URL[] urls = new URL[] { new URL( "file:" + jolieDir + fs + "jolie.jar" ), new URL( "file:" + jolieDir + fs + "lib" + fs + "libjolie.jar" ) };
 //		ClassLoader cl = new URLClassLoader( urls, Installer.class.getClassLoader() );
 //		Class<?> jolieClass = cl.loadClass( "jolie.Jolie" );
