@@ -72,7 +72,7 @@ main
 	e_arg -> e.args[#e.args];
 //	compile;
 	
-	recreateReleaseDir;	
+	recreateReleaseDir;
 
 	e = "cp";
 	e_arg = "-rp";
@@ -80,6 +80,22 @@ main
 	e_arg = ReleaseDir + "/dist";
 	e.waitFor = 1;
 	exec;
+
+
+	if( #args < 1 ) {
+		println@Console( "Usage `jolie release.ol /path/to/jolie/dist/directory`\n" +
+			"INFO: The release assembler tool has been launched without\n" +
+			"specifying the source folder for the Jolie distributable binaries.\n" +
+			"Using the default one: "  + e.args[1]
+  	)()
+	} else {
+		println@Console( "INFO: the release assembler tool has been launched on \n" +
+			"source folder for the Jolie distributable binaries: " + e.args[1] 
+		)()
+	};
+	println@Console( "Press any key to proceed..." )();
+	registerForInput@Console()();
+	in();
 
 	reset_args;
 	e_arg = "jolie_installer/dist/jolie_installer.jar";
