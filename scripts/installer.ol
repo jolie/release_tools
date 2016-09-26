@@ -47,7 +47,7 @@ define setJHProc
 		trim@StringUtils( jh )( jh );
 		if ( jh == "" ) {
 			jh = djh
-		}	
+		}
 	};
 	normalisePath@OSInst( jh )( jh )
 }
@@ -69,11 +69,11 @@ define setLPProc
 	normalisePath@OSInst( lp )( lp )
 }
 
-/* 
+/*
  * Make command line flags setting possible in a abitrary way, after the first argument (reserved for OS choice).
- * Certain flags (such as the help flag) may have a higher priority than others and thus override the actions of other flags. 
- * When flags are not recognized the help message is shown, and the installation process is skipped. 
- */ 
+ * Certain flags (such as the help flag) may have a higher priority than others and thus override the actions of other flags.
+ * When flags are not recognized the help message is shown, and the installation process is skipped.
+ */
 define getArguments
 {
 	for ( i = 1, i < #args, ++i ) {
@@ -82,7 +82,7 @@ define getArguments
 				showHelp = true
 			} else {
 				jh = args[ i + 1 ];
-				i += 1	
+				i += 1
 			}
 		} else if ( args[ i ] == "-jl" || args[ i ] == "--jolie-launchers" || args[ i ] == "/jl" || args[ i ] == "/jolie-launchers" ) {
 			if ( !is_defined( args[ i + 1 ] ) ) {
@@ -92,7 +92,7 @@ define getArguments
 				i += 1
 			}
 		} else if ( args[ i ] == "-h" || args[ i ] == "--help" || args[ i ] == "/h" || args[ i ] == "/help" ) {
-			showHelp = true	
+			showHelp = true
 		} else {
 			showHelp = true
 		}
@@ -106,6 +106,7 @@ main
 	if( args[0] == "macos" || args[0] == "linux" ) {
 		args[0] = "nix"
 	};
+
 	getArguments;
 
 	if ( showHelp ) {
@@ -114,17 +115,17 @@ main
 			"Following options are available:"
 			)();
 		if (args[0] == "nix") {
-			println@Console( 
+			println@Console(
 				"    -h | --help\t Show this help message\n" +
 				"    -jh <path> | --jolie-home <path>\t Set the installation path for the Jolie liberary files\n" +
-				"    -jl <path> | --jolie-launchers <path>\t Set the installation path for the Jolie launcher executables\n" 
+				"    -jl <path> | --jolie-launchers <path>\t Set the installation path for the Jolie launcher executables\n"
 			)()
 		} else {
 			// windows cmd
-			println@Console( 
+			println@Console(
 				"    /h | /help\t Show this help message\n" +
 				"    /jh <path> | /jolie-home <path>\t Set the installation path for the Jolie liberary files\n" +
-				"    /jl <path> | /jolie-launchers <path>\t Set the installation path for the Jolie launcher executables\n" 
+				"    /jl <path> | /jolie-launchers <path>\t Set the installation path for the Jolie launcher executables\n"
 			)()
 		};
 		println@Console(
@@ -137,14 +138,16 @@ main
 		loadEmbeddedService@Runtime( eInfo )( OSInst.location );
 
 		// unzipDist@OSInst()();
-
-		registerForInput@Console()();
+		if ( !is_defined( jh ) ) {
+			// normal mode
+			registerForInput@Console()()
+		};
 		setJHProc;
-		
-		
+
+
 		exists@File( jh )( exists );
 		if ( exists ) {
-			// interactive 'normal' install mode 
+			// interactive 'normal' install mode
 			print@Console(
 			"\nThe target installation directory " + jh + " already exists.\n"
 			+ "Delete it before proceeding? [y/N]\n\n > "
@@ -159,20 +162,20 @@ main
 				deleteDir@OSInst( jh )();
 				println@Console( "\nDirectory " + jh + " does not exist. It has now been created." )();
 				mkdir@OSInst( jh )()
-			}	
+			}
 		} else {
 			println@Console( "\nDirectory " + jh + " does not exist. It has now been created." )();
 			mkdir@OSInst( jh )()
 		};
 
-		
-		install ( CannotCopyBins => 
+
+		install ( CannotCopyBins =>
 			sleep@Time( 1000 )();
 			println@Console( main.CannotCopyBins.message )();
 			throw( FaultInstallation )
 		);
 		copyBins@OSInst( jh )();
-			
+
 		println@Console( "\nJolie libraries installed in path " + jh + "\n" )();
 
 		setLPProc;
@@ -181,10 +184,10 @@ main
 			println@Console( "\nDirectory " + lp + " does not exist. It has now been created." )();
 			mkdir@OSInst( lp )()
 		};
-		
-		install ( CannotCopyInstallers => 
+
+		install ( CannotCopyInstallers =>
 			sleep@Time( 1000 )();
-			println@Console( main.CannotCopyInstallers.message )(); 
+			println@Console( main.CannotCopyInstallers.message )();
 			throw( FaultInstallation )
 		);
 		copyLaunchers@OSInst( lp )();
