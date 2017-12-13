@@ -99,7 +99,12 @@ main
 
 	reset_args;
 	e_arg = "jolie_installer/dist/jolie_installer.jar";
-	e_arg = ReleaseDir + "/jolie_installer.jar";
+    if ( #args == 2 ) {
+        e_arg = ReleaseDir + "/" + args[1] + ".jar"
+    } else {
+        e_arg = ReleaseDir + "/jolie_installer.jar"
+    };
+    // e_arg = ReleaseDir + "/jolie_installer.jar";
 	exec;
 
 	reset_args;
@@ -128,7 +133,12 @@ main
 	reset_args;
 	e = "jar";
 	e_arg = "uvf";
-	e_arg = ReleaseDir + "/jolie_installer.jar";
+	// e_arg = ReleaseDir + "/jolie_installer.jar";
+	if ( #args == 2 ) {
+        e_arg = ReleaseDir + "/" + args[1] + ".jar"
+    } else {
+        e_arg = ReleaseDir + "/jolie_installer.jar"
+    };
 	// e_arg = "scripts/MANIFEST.MF";
 	e_arg = "-C";
 	e_arg = ReleaseDir;
