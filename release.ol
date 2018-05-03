@@ -52,13 +52,13 @@ define recreateReleaseDir
 	e.waitFor = 1;
 	e.stdOutConsoleEnable = true;
 	exec@Exec( e )();
-	
+
 	undef( e.args );
 	e = "mkdir";
 	e_arg = ReleaseDir;
 	exec;
 
-	
+
 	undef( e )
 }
 
@@ -71,7 +71,7 @@ main
 {
 	e_arg -> e.args[#e.args];
 //	compile;
-	
+
 	recreateReleaseDir;
 
 	e = "cp";
@@ -90,12 +90,12 @@ main
   	)()
 	} else {
 		println@Console( "INFO: the release assembler tool has been launched on \n" +
-			"source folder for the Jolie distributable binaries: " + e.args[1] 
+			"source folder for the Jolie distributable binaries: " + e.args[1]
 		)()
 	};
-	println@Console( "Press any key to proceed..." )();
-	registerForInput@Console()();
-	in();
+	// println@Console( "Press any key to proceed..." )();
+	// registerForInput@Console()();
+	// in();
 
 	reset_args;
 	e_arg = "jolie_installer/dist/jolie_installer.jar";
@@ -154,4 +154,3 @@ main
 	e_arg = "lib/libjolie.jar";
 	exec
 }
-
