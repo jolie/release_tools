@@ -36,7 +36,8 @@ define exec
 
 define compile
 {
-	e = "ant";
+	e = "mvn";
+	e.args[0] = "install";
 	e.workingDirectory = args[0];
 	e.waitFor = 1;
 	e.stdOutConsoleEnable = true;
