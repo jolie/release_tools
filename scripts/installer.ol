@@ -70,7 +70,7 @@ define setLPProc
 }
 
 /*
- * Make command line flags setting possible in a abitrary way, after the first argument (reserved for OS choice).
+ * Make command line flags setting possible in a arbitrary way, after the first argument (reserved for OS choice).
  * Certain flags (such as the help flag) may have a higher priority than others and thus override the actions of other flags.
  * When flags are not recognized the help message is shown, and the installation process is skipped.
  */
@@ -117,14 +117,14 @@ main
 		if (args[0] == "nix") {
 			println@Console(
 				"    -h | --help\t Show this help message\n" +
-				"    -jh <path> | --jolie-home <path>\t Set the installation path for the Jolie liberary files\n" +
+				"    -jh <path> | --jolie-home <path>\t Set the installation path for the Jolie library files\n" +
 				"    -jl <path> | --jolie-launchers <path>\t Set the installation path for the Jolie launcher executables\n"
 			)()
 		} else {
 			// windows cmd
 			println@Console(
 				"    /h | /help\t Show this help message\n" +
-				"    /jh <path> | /jolie-home <path>\t Set the installation path for the Jolie liberary files\n" +
+				"    /jh <path> | /jolie-home <path>\t Set the installation path for the Jolie library files\n" +
 				"    /jl <path> | /jolie-launchers <path>\t Set the installation path for the Jolie launcher executables\n"
 			)()
 		};
