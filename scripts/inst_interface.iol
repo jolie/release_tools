@@ -5,7 +5,7 @@ constants
 	JOLIE_FOLDER = "jolie"
 }
 
-type ErrorType: void { .message: string }
+type ErrorType { message: string }
 
 interface InstInterface {
 RequestResponse:
