@@ -33,7 +33,7 @@ constants
 {
 	DEFAULT_JOLIE_HOME = "C:\\Jolie",
 	DEFAULT_LAUNCHERS_PATH = "C:\\Windows\\system32",
-	LAUNCHERS_PATH = "launchers/windows",
+	LAUNCHERS_PATH = "launchers\\windows",
 	ADMIN_ERROR = "Error: the installer could not find the launchers files. To complete the installation, try to run the installer with administrator privileges."
 }
 
@@ -99,7 +99,7 @@ main
 		scope ( s ){
 			install ( FileNotFound => throw( CannotCopyBins, { .message = ADMIN_ERROR } ) );
 			// copy the content of dist/jolie
-			copy.from = cd + "/" + DIST_FOLDER + "/" + JOLIE_FOLDER + "/";
+			copy.from = cd + "\\" + DIST_FOLDER + "\\" + JOLIE_FOLDER + "\\";
 			copy.to = bin_folder;
 			copyDir@File( copy )( copy_resp );
 			if ( !copy_resp ) { throw( FileNotFound ) }
@@ -109,7 +109,7 @@ main
 	[ copyLaunchers( l_folder )() {
 		scope ( s ){
 			install ( FileNotFound => throw( CannotCopyInstallers, { .message = ADMIN_ERROR } ) );
-			copy.from = cd + "/" + DIST_FOLDER + "/" + LAUNCHERS_PATH + "/";
+			copy.from = cd + "\\" + DIST_FOLDER + "\\" + LAUNCHERS_PATH + "\\";
 			copy.to = l_folder;
 			copyDir@File( copy )( copy_resp );
 			if ( !copy_resp ) { throw( FileNotFound ) }
