@@ -152,6 +152,9 @@ main
 	e_arg = "jolie.jar";
 	e_arg = "-C";
 	e_arg = ReleaseDir + "/dist/jolie";
+	e_arg = "jolie-cli.jar";
+	e_arg = "-C";
+	e_arg = ReleaseDir + "/dist/jolie";
 	e_arg = "lib/libjolie.jar";
 	e_arg = "-C";
 	e_arg = ReleaseDir + "/dist/jolie";
