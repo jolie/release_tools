@@ -148,16 +148,34 @@ public class Installer {
 	private String getLauncher( String os, String jolieHome ){
 		if( os.equals( "windows" ) ){
 			jolieHome = jolieHome + File.separator;
-			return "java -ea:jolie... -ea:joliex... -Xmx1G -cp " + jolieHome + "jolie-cli.jar;" + jolieHome + "jolie.jar" + " -l "
-					+ ".\\lib\\*;" + jolieHome + "lib;" + jolieHome + "javaServices\\*;"
-					+ jolieHome + "extensions\\* -i " + jolieHome + "include";
+			return "java -ea:jolie... -ea:joliex... -Xmx1G -cp "
+					+ jolieHome + "lib\\libjolie.jar;"
+					+ jolieHome + "lib\\automaton.jar;"
+					+ jolieHome + "lib\\jolie-js.jar;"
+					+ jolieHome + "lib\\json_simple.jar;"
+					+ jolieHome + "jolie.jar;"
+					+ jolieHome + "jolie-cli.jar"
+					+ " jolie.Jolie"
+					+ " -l .\\lib\\*;"
+					+ jolieHome + "lib;"
+					+ jolieHome + "javaServices\\*;"
+					+ jolieHome + "extensions\\*"
+					+ " -i " + jolieHome + "\\include";
 		} else {
 			return "java -ea:jolie... -ea:joliex... -Xmx1G "
 					+ "-Djava.rmi.server.codebase=file:/" + jolieHome + "/extensions/rmi.jar -cp "
-					+ jolieHome + "/lib/libjolie.jar:" + jolieHome + "/jolie.jar:" + jolieHome + "/jolie-cli.jar" + " jolie.Jolie "
-					+ "-l ./lib/*:" + jolieHome + "/lib:" + 
-					jolieHome + "/javaServices/*:" + jolieHome + "/extensions/* "
-					+ "-i " + jolieHome + "/include";
+					+ jolieHome + "/lib/libjolie.jar:"
+					+ jolieHome + "/lib/automaton.jar:"
+					+ jolieHome + "/lib/jolie-js.jar:"
+					+ jolieHome + "/lib/json_simple.jar:"
+					+ jolieHome + "/jolie.jar:"
+					+ jolieHome + "/jolie-cli.jar"
+					+ " jolie.Jolie"
+					+ " -l ./lib/*:"
+					+ jolieHome + "/lib:"
+					+ jolieHome + "/javaServices/*:"
+					+ jolieHome + "/extensions/*"
+					+ " -i " + jolieHome + "/include";
 		}
 	}
 	
