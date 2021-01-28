@@ -159,5 +159,11 @@ main
 	e_arg = "-C";
 	e_arg = ReleaseDir + "/dist/jolie";
 	e_arg = "lib/automaton.jar";
+	e_arg = "-C";
+	e_arg = ReleaseDir + "/dist/jolie";
+	e_arg = "lib/jolie-js.jar";
+	e_arg = "-C";
+	e_arg = ReleaseDir + "/dist/jolie";
+	e_arg = "lib/json_simple.jar";
 	exec
 }
