@@ -164,6 +164,6 @@ main
 	e_arg = "lib/jolie-js.jar";
 	e_arg = "-C";
 	e_arg = ReleaseDir + "/dist/jolie";
-	e_arg = "lib/json_simple.jar";
+	e_arg = "lib/json-simple.jar";
 	exec
 }
